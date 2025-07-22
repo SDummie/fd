@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded AI Copilot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="header-title">Embedded AI Copilot</h1>
+            <button class="btn btn--secondary btn--sm theme-toggle" id="themeToggle">
+                <span class="theme-icon">🌙</span>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Chat Panel -->
+            <section class="chat-panel">
+                <div class="chat-header">
+                    <h2>Chat Panel</h2>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-message">
+                        <div class="message ai-message">
+                            <div class="message-content">
+                                <p>Welcome to your Embedded AI Copilot! I'm here to help you with embedded software design for smart vehicles. Ask me about ECU tasks, AUTOSAR components, safety requirements, or any embedded development challenges.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <textarea 
+                            class="form-control chat-input" 
+                            id="chatInput" 
+                            placeholder="Describe your ECU task..."
+                            rows="1"></textarea>
+                        <button class="btn btn--primary send-btn" id="sendBtn">
+                            <span>Send</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Snippet Library -->
+            <section class="snippet-library">
+                <div class="library-header">
+                    <h2>Snippet Library</h2>
+                </div>
+                <div class="accordion" id="snippetAccordion">
+                    <div class="accordion-item">
+                        <button class="accordion-header" data-target="rtos-template">
+                            <span>RTOS Task Template</span>
+                            <span class="accordion-icon">▼</span>
+                        </button>
+                        <div class="accordion-content" id="rtos-template">
+                            <pre><code class="language-c">#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+
+#define TASK_PRIORITY       (2)
+#define TASK_STACK_SIZE     (1024)
+
+static void sensor_task(void *pvParameters)
+{
+    TickType_t xLastWakeTime;
+    const TickType_t xFrequency = pdMS_TO_TICKS(100); // 100ms
+    
+    xLastWakeTime = xTaskGetTickCount();
+    
+    for(;;)
+    {
+        // Read sensor data
+        uint16_t sensor_value = read_sensor();
+        
+        // Process data
+        process_sensor_data(sensor_value);
+        
+        // Wait for next cycle
+        vTaskDelayUntil(&xLastWakeTime, xFrequency);
+    }
+}
+
+void create_sensor_task(void)
+{
+    xTaskCreate(sensor_task, "SensorTask", 
+                TASK_STACK_SIZE, NULL, 
+                TASK_PRIORITY, NULL);
+}</code></pre>
+                            <button class="btn btn--outline btn--sm insert-btn" data-snippet="rtos-template">
+                                Insert to Chat
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header" data-target="autosar-rte">
+                            <span>AUTOSAR RTE Stub</span>
+                            <span class="accordion-icon">▼</span>
+                        </button>
+                        <div class="accordion-content" id="autosar-rte">
+                            <pre><code class="language-c">/* AUTOSAR RTE Generated Code */
+#include "Rte_SensorComponent.h"
+
+FUNC(void, SensorComponent_CODE) SensorComponent_Init(void)
+{
+    /* Initialize sensor hardware */
+    sensor_hardware_init();
+    
+    /* Set default values */
+    Rte_IWrite_SensorComponent_SensorValue(0);
+}
+
+FUNC(void, SensorComponent_CODE) SensorComponent_Runnable(void)
+{
+    uint16 sensorData;
+    Std_ReturnType status;
+    
+    /* Read from sensor */
+    status = sensor_read(&sensorData);
+    
+    if (status == E_OK)
+    {
+        /* Write to RTE */
+        Rte_IWrite_SensorComponent_SensorValue(sensorData);
+        
+        /* Trigger events */
+        Rte_Call_SensorPort_TriggerEvent();
+    }
+}</code></pre>
+                            <button class="btn btn--outline btn--sm insert-btn" data-snippet="autosar-rte">
+                                Insert to Chat
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header" data-target="safety-checklist">
+                            <span>ISO 26262 Safety Check</span>
+                            <span class="accordion-icon">▼</span>
+                        </button>
+                        <div class="accordion-content" id="safety-checklist">
+                            <div class="checklist">
+                                <h4>Safety Requirements Checklist:</h4>
+                                <ul>
+                                    <li>✓ Hazard Analysis and Risk Assessment (HARA) completed</li>
+                                    <li>✓ ASIL classification determined</li>
+                                    <li>✓ Safety goals defined and allocated</li>
+                                    <li>✓ Functional safety requirements specified</li>
+                                    <li>✓ Hardware-software interface defined</li>
+                                    <li>✓ Diagnostic coverage requirements met</li>
+                                    <li>✓ Fault detection and handling implemented</li>
+                                    <li>✓ Safety mechanisms verified</li>
+                                    <li>✓ Verification and validation plan executed</li>
+                                    <li>✓ Documentation and traceability maintained</li>
+                                </ul>
+                            </div>
+                            <button class="btn btn--outline btn--sm insert-btn" data-snippet="safety-checklist">
+                                Insert to Chat
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header" data-target="can-driver">
+                            <span>CAN Driver Init Example</span>
+                            <span class="accordion-icon">▼</span>
+                        </button>
+                        <div class="accordion-content" id="can-driver">
+                            <pre><code class="language-c">#include "can_driver.h"
+#include "stm32f4xx_hal.h"
+
+CAN_HandleTypeDef hcan1;
+
+typedef struct {
+    uint32_t id;
+    uint8_t data[8];
+    uint8_t length;
+} can_message_t;
+
+HAL_StatusTypeDef can_init(void)
+{
+    CAN_FilterTypeDef sFilterConfig;
+    
+    hcan1.Instance = CAN1;
+    hcan1.Init.Prescaler = 16;
+    hcan1.Init.Mode = CAN_MODE_NORMAL;
+    hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
+    hcan1.Init.TimeSeg1 = CAN_BS1_1TQ;
+    hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
+    hcan1.Init.TimeTriggeredMode = DISABLE;
+    hcan1.Init.AutoBusOff = DISABLE;
+    hcan1.Init.AutoWakeUp = DISABLE;
+    hcan1.Init.AutoRetransmission = DISABLE;
+    hcan1.Init.ReceiveFifoLocked = DISABLE;
+    hcan1.Init.TransmitFifoPriority = DISABLE;
+    
+    if (HAL_CAN_Init(&hcan1) != HAL_OK)
+    {
+        return HAL_ERROR;
+    }
+    
+    /* Configure filter */
+    sFilterConfig.FilterBank = 0;
+    sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+    sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+    sFilterConfig.FilterIdHigh = 0x0000;
+    sFilterConfig.FilterIdLow = 0x0000;
+    sFilterConfig.FilterMaskIdHigh = 0x0000;
+    sFilterConfig.FilterMaskIdLow = 0x0000;
+    sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
+    sFilterConfig.FilterActivation = ENABLE;
+    sFilterConfig.SlaveStartFilterBank = 14;
+    
+    if (HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK)
+    {
+        return HAL_ERROR;
+    }
+    
+    /* Start CAN */
+    if (HAL_CAN_Start(&hcan1) != HAL_OK)
+    {
+        return HAL_ERROR;
+    }
+    
+    return HAL_OK;
+}</code></pre>
+                            <button class="btn btn--outline btn--sm insert-btn" data-snippet="can-driver">
+                                Insert to Chat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Prototype – no backend. All data remains in browser memory.</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
